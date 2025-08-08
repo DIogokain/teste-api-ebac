@@ -1,7 +1,6 @@
 /// <reference types="cypress" />
 
 describe('Testes da Funcionalidade Usuários', () => {
-  
 
   it('Deve validar contrato de usuários', () => {
 
@@ -19,28 +18,28 @@ describe('Testes da Funcionalidade Usuários', () => {
              })
     })    
   it('Deve cadastrar um usuário com sucesso', () => {
+       let email= 'Usuario' + Math.floor(Math.random() * 100000000)+'@qa.com.br';
           cy.request({
             method: 'POST',
               url: '/usuarios',
                body: {
                 nome: "Fulano da Silva",
-                 email: "bltraoqa@qa.com.br",
+                 email: email,
                    password: "teste",
-                    administrador: "true"
-    }
+                    administrador: "true"}
               }).then((response) => {
                  expect(response.status).to.eq(201)
                  expect(response.body).to.have.property('message')
   });
 });
      it('Deve validar um usuário com email inválido', () => {
-  cy.request({
+       cy.request({
             method: 'POST',
              url: '/usuarios',
               failOnStatusCode: false,
                body: {
                  nome: "Fulano da Silva",
-                  email: "emailinvalido.com", 
+                  email: "emailnvalido.com", 
                    password: "123456",
                     administrador: "true"
     }
@@ -50,13 +49,24 @@ describe('Testes da Funcionalidade Usuários', () => {
   });
 });
 
-  it('Deve editar um usuário previamente cadastrado', () => {
-    //TODO: 
+  it.only('Deve editar um usuário previamente cadastrado', () => {
+        cy.request({
+          method: 'PUT',
+          url: '/usuarios' + '/0uxuPY0cbmQhpEz1',
+          body: { 
+                 "nome": "Fulno",
+                   "email": "beltrano@qa.com.br",
+                     "password": "teste",
+                       "administrador": "true"
+}
+        }).then((response) => {
+                expect(response.status).to.eq(200);
+                expect(response.body.message).eq("Registro alterado com sucesso")
   });
 
   it('Deve deletar um usuário previamente cadastrado', () => {
     //TODO: 
   });
 
-  
+})
   
