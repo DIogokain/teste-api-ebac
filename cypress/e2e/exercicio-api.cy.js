@@ -6,7 +6,6 @@ describe('Testes da Funcionalidade Usuários', () => {
     //TODO: 
   });
 
-
   it('Deve listar usuários cadastrados', () => {
        cy.request({
           method: 'GET',
@@ -15,7 +14,9 @@ describe('Testes da Funcionalidade Usuários', () => {
       expect(Response.status).eq(200)
       expect(Response.body).to.have.property('usuarios')
    })
+
   });
+
 
   it('Deve cadastrar um usuário com sucesso', () => {
       let email= 'Usuario' + Math.floor(Math.random() * 100000000)+'@qa.com.br';
@@ -36,26 +37,40 @@ describe('Testes da Funcionalidade Usuários', () => {
 
   });
 
+
   it('Deve editar um usuário previamente cadastrado', () => {
-      cy.request({
+     let email= 'Usuario' + Math.floor(Math.random() * 100000000)+'@qa.com.br';
+       cy.cadastroUsuario("Fulano da Silva",email, "teste")
+       .then(response =>{
+        let id = response.body._id
+        cy.request({
         method: 'PUT',
-        url: '/usuarios' + '/0uxuPY0cbmQhpEz1',
+        url: `/usuarios/${id}`,
         body: { 
-        "nome": "Fulno",
-        "email": "beltrano@qa.com.br",
+        "nome": "Fulano da Silva",
+        "email": email,
         "password": "teste",
-        "administrador": "true"
-  }
-  }).then((response) => {
+        "administrador": "true"},
+      }).should((response) => {
       expect(response.status).to.eq(200);
       expect(response.body.message).eq("Registro alterado com sucesso")
-  });
+ });
 
   });
 
-  it('Deve deletar um usuário previamente cadastrado', () => {
-    
-  });
+  })
 
-
-});
+   it('Deve deletar um usuário previamente cadastrado', () => {
+      cy.cadastroUsuario("Produto a ser Deletado", "Kaino@gmail.com", "123456")
+      .then(response =>{
+        let id = response.body._id
+        cy.request({
+         method: "DELETE",
+         url:`usuarios/${id}`,
+        }).then(response =>{
+          expect(response.status).to.eq(200);
+          expect(response.body.message).to.eq("Registro excluído com sucesso")
+        }) 
+      })
+    });
+  })
