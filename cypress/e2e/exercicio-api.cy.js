@@ -1,9 +1,12 @@
 /// <reference types="cypress" />
+import contrato from '../contracts/usuarios.contract'
 
 describe('Testes da Funcionalidade Usuários', () => {
 
   it('Deve validar contrato de usuários', () => {
-    //TODO: 
+    cy.request('usuarios').then(reponse =>{
+      return contrato.validateAsync(reponse.body)
+    })
   });
 
   it('Deve listar usuários cadastrados', () => {
