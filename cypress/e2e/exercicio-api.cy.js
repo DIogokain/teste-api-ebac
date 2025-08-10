@@ -34,25 +34,16 @@ describe('Testes da Funcionalidade Usuários', () => {
 
   });
 
-  it('Deve validar um usuário com email inválido', () => {
-          cy.request({
-          method: 'POST',
-          url: '/usuarios',
-          failOnStatusCode: false,
-          body: {
-          nome: "Fulano da Silva",
-          email: "emailnvalido.com", 
-          password: "123456",
-          administrador: "true"
-  }
-  }).then((response) => {
+  it.only('Deve validar um usuário com email inválido', () => {
+    cy.cadastroUsuario("Fulano da Silva","beltrano@qa.com.br", "teste")
+    .should((response) => {
      expect(response.status).to.eq(400);
-     expect(response.body.email).eq('email deve ser um email válido')
+     expect(response.body.message).to.equal('Este email já está sendo usado')
   });
 
   });
 
-  it.only('Deve editar um usuário previamente cadastrado', () => {
+  it('Deve editar um usuário previamente cadastrado', () => {
       cy.request({
         method: 'PUT',
         url: '/usuarios' + '/0uxuPY0cbmQhpEz1',
