@@ -19,22 +19,15 @@ describe('Testes da Funcionalidade Usuários', () => {
 
   it('Deve cadastrar um usuário com sucesso', () => {
       let email= 'Usuario' + Math.floor(Math.random() * 100000000)+'@qa.com.br';
-          cy.request({
-          method: 'POST',
-          url: '/usuarios',
-          body: {
-          nome: "Fulano da Silva",
-          email: email,
-          password: "teste",
-          administrador: "true"}
-   }).then((response) => {
+       cy.cadastroUsuario("Fulano da Silva",email, "teste")
+         .then((response) => {
       expect(response.status).to.eq(201)
       expect(response.body).to.have.property('message')
   });
 
   });
 
-  it.only('Deve validar um usuário com email inválido', () => {
+  it('Deve validar um usuário com email inválido', () => {
     cy.cadastroUsuario("Fulano da Silva","beltrano@qa.com.br", "teste")
     .should((response) => {
      expect(response.status).to.eq(400);
